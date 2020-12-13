@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+    tools {
+        maven "m3"
+    }
+    stages {
+        stage ('git clone') {
+            steps {
+                git 'https://github.com/b2std/bf.git'
+            }
+        }
+        stage ('build') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+        stage ('deploy') {
+            steps {
+                deploy adapters: [tomcat8(credentialsId: '4e82c4e5-7ca6-4d4c-b259-267b1cb97e9f', path: '', url: 'http://35.242.206.186:8080')], contextPath: 'mywebapp2', war: '**/*.war'
+            }
+        }
+    }
+}
